@@ -4,7 +4,11 @@ from setuptools import setup, Extension
 from Cython.Distutils import build_ext
 from Cython.Build import cythonize
 
+import platform
 
+if platform.system() == "Darwin":
+    compile_extra_args = ['-std=c++11', "-mmacosx-version-min=10.14"]
+    
 here = os.path.abspath(os.path.dirname(__file__))
 # Get the long description from the README file
 with open(os.path.join(here, 'README.md')) as f:
@@ -25,7 +29,8 @@ original_ext = Extension('sparse_dot_topn.sparse_dot_topn',
                          sources=['./sparse_dot_topn/sparse_dot_topn.pyx',
                                   './sparse_dot_topn/sparse_dot_topn_source.cpp'],
                          include_dirs=[numpy.get_include()],
-                         extra_compile_args=extra_compile_args,
+                         # extra_compile_args=extra_compile_args,
+                         extra_compile_args=compile_extra_args,
                          language='c++')
 
 threaded_ext = Extension('sparse_dot_topn.sparse_dot_topn_threaded',
@@ -34,7 +39,8 @@ threaded_ext = Extension('sparse_dot_topn.sparse_dot_topn_threaded',
                              './sparse_dot_topn/sparse_dot_topn_source.cpp',
                              './sparse_dot_topn/sparse_dot_topn_parallel.cpp'],
                          include_dirs=[numpy.get_include()],
-                         extra_compile_args=extra_compile_args,
+                         # extra_compile_args=extra_compile_args,
+                         extra_compile_args=compile_extra_args,
                          language='c++')
 
 
